@@ -1,29 +1,15 @@
 package main
 import(
     "fuzzy/farm"
+    "fuzzy/manager"
     "time"
     "fmt"
 )
 
 func main(){
-    TheFarm := &farm.Farm {
-        NFuzzies: 10,
-        Animals: make(map[string]*farm.Animal, 4),
-    }
-    TheFarm.Animals["cats"] = &farm.Animal {
-        Name: "Kitties",
-        Count: 0,
-        DIncome: 0,
-        DCount: 0,
-        Embryos: 0,
-    }
-    TheFarm.Animals["dogs"] = &farm.Animal {
-        Name: "Puppies",
-        Count: 0,
-        DIncome: 0,
-        DCount: 0,
-        Embryos: 0,
-    }
+    TheManager := &manager.Manager{}
+    TheManager.StartFarm()
+    TheFarm := TheManager.Farm
     
     //fmt.Println(TheFarm)
     c1 := time.Tick(1 * time.Millisecond)
