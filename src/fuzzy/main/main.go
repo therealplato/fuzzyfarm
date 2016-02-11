@@ -2,11 +2,13 @@ package main
 import(
     "fuzzy/farm"
     "fuzzy/manager"
+    "fuzzy/server"
     "time"
     "fmt"
 )
 
 func main(){
+    go server.StartServing()
     TheManager := &manager.Manager{}
     TheManager.StartFarm()
     TheFarm := TheManager.Farm
@@ -21,7 +23,7 @@ func main(){
 }
 
 func run(TheFarm *farm.Farm, c <-chan time.Time, quit chan bool){
-    TheFarm.Animals["cats"].Spawn(200)
+    TheFarm.Animals["cats"].Spawn(20)
     TheFarm.Animals["dogs"].Spawn(10)
     for _ = range c {
         // 1 ms tick
