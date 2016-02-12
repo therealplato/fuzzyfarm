@@ -61,6 +61,9 @@ function init(){
     var WS = new WebSocket('wss://go-plato-platocambrian.c9users.io/socket')
     WS.onmessage = function(msg){
         var d = JSON.parse(msg.data);
+        if(d.Err){
+            return alert(d.Err)
+        }
         F.value = d.Fuzzies.toFixed(2);
         A1.value = d.Cats;
         A2.value = d.Dogs;
