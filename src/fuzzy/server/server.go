@@ -6,8 +6,13 @@ import(
     "fmt"
     "html/template"
     "golang.org/x/net/websocket"
+    "fuzzy/manager"
+    "fuzzy/models"
 )
-    var listenAddr string
+
+var listenAddr string
+
+
 
 func StartServing(){
     fmt.Println(os.Args)
@@ -28,11 +33,17 @@ func StartServing(){
 func handler(w http.ResponseWriter, r *http.Request){
     rootTemplate.Execute(w, listenAddr)
 }
-func socketHandler(c *websocket.Conn){
+func socketHandler(ws *websocket.Conn){
+    fmt.Println("Received WS connection")
+    s := models.FarmSocket{Conn: ws, Done: make(chan bool)}
+    go manager.NewManager().StartFarm(s)
+    <-s.Done
+    /*
     var s string
     fmt.Fscan(c, &s)
     fmt.Println("Received ", s)
     fmt.Fprint(c, "Hi from Go")
+    */
 }
 
 var rootTemplate = template.Must(template.New("root").Parse(`
@@ -53,7 +64,36 @@ function init(){
     }
 }
 </script>
+<style>
+body {
+    margin: 4em;
+}
+.leftCol {
+    display: inline-block;
+    width: 6em;
+}
+.rightCol {
+    display: inline-block;
+    margin-left: 6em;
+}
+.animal {
+    margin-bottom: 0.em;
+}
+</style>
+</head>
 <body>
-<p>Hello Web!</p>
+Spend Fuzzies to buy animals which earn Fuzzies and make more animals!
+<div class="animal">
+<label class="leftCol">Fuzzies</label>
+<input class="rightCol" id="countFuzzies">
+</div>
+<div class="animal">
+<label class="leftCol">Kittens</label>
+<input class="rightCol" id="countKittens">
+</div>
+<div class="animal">
+<label class="leftCol">Puppies</label>
+<input class="rightCol" id="countPuppies">
+</div>
 </html>
 `))
