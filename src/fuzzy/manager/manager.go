@@ -5,6 +5,7 @@ import(
     "time"
     "fuzzy/farm"
     "fuzzy/models"
+    "encoding/json"
 )
 type Manager struct {
     Farm *farm.Farm
@@ -64,11 +65,27 @@ func (m *Manager) updateFarmLoop(c1 <-chan time.Time){
     }    
 }
 
+type FarmJSON struct {
+    Fuzzies float64
+    Cats int
+    Dogs int
+}
+
 func (m *Manager) outputFarmLoop(c1000 <-chan time.Time){
     for _ = range c1000 {
         // 1 s tick
         fmt.Printf("Cats: %v  Dogs: %v  Fuzzies: %.3f\n", m.Farm.Animals["cats"].Count, m.Farm.Animals["dogs"].Count, m.Farm.NFuzzies)
-        fmt.Fprintln(m.FSocket, m.Farm.NFuzzies)
+        outputTmp := FarmJSON {
+          Fuzzies: m.Farm.NFuzzies,
+          Cats: m.Farm.Animals["cats"].Count,
+          Dogs: m.Farm.Animals["dogs"].Count,
+        }
+        outputJSON, err := json.Marshal(outputTmp)
+        if(err == nil){
+            fmt.Fprintln(m.FSocket, string(outputJSON))
+        } else {
+            fmt.Println(err)
+        }
     }
 
 }

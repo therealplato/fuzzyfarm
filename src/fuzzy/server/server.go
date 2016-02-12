@@ -54,9 +54,16 @@ var rootTemplate = template.Must(template.New("root").Parse(`
 <script>
 document.addEventListener('DOMContentLoaded', init)
 function init(){
+    var F = document.getElementById("countFuzzies")
+    var A1 = document.getElementById("countKittens")
+    var A2 = document.getElementById("countPuppies")
+    
     var WS = new WebSocket('wss://go-plato-platocambrian.c9users.io/socket')
     WS.onmessage = function(msg){
-        console.log(msg)
+        var d = JSON.parse(msg.data);
+        F.value = d.Fuzzies.toFixed(2);
+        A1.value = d.Cats;
+        A2.value = d.Dogs;
     }
     WS.onopen = function(){
         console.log('JS connected!')
