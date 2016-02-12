@@ -35,8 +35,8 @@ func handler(w http.ResponseWriter, r *http.Request){
 }
 func socketHandler(ws *websocket.Conn){
     fmt.Println("Received WS connection")
-    s := models.FarmSocket{Conn: ws, Done: make(chan bool)}
-    go manager.NewManager().StartFarm(s)
+    s := models.FarmSocket{ws, make(chan bool)}
+    go manager.NewManager(s).StartFarm()
     <-s.Done
     /*
     var s string
