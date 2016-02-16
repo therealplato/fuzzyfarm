@@ -70,8 +70,13 @@ function init(){
     }
     WS.onopen = function(){
         console.log('JS connected!')
-        WS.send('JS connected!');
     }
+    document.getElementById('buyCats').addEventListener('click', function(){
+        WS.send("cat");
+    })
+    document.getElementById('buyDogs').addEventListener('click', function(){
+        WS.send("dog");
+    })
 }
 </script>
 <style>
@@ -85,6 +90,7 @@ body {
 .rightCol {
     display: inline-block;
     margin-left: 6em;
+    width: 10em;
 }
 .animal {
     margin-bottom: 0.em;
@@ -100,10 +106,12 @@ Spend Fuzzies to buy animals which earn Fuzzies and make more animals!
 <div class="animal">
 <label class="leftCol">Kittens</label>
 <input class="rightCol" id="countKittens">
+<button id="buyCats">Buy</button>
 </div>
 <div class="animal">
 <label class="leftCol">Puppies</label>
 <input class="rightCol" id="countPuppies">
+<button id="buyDogs">Buy</button>
 </div>
 </html>
 `))

@@ -4,7 +4,7 @@ import(
 )
 
 const CostPerAnimal float64 = 0.001
-const IncomePerAnimal float64 = 0.000001   // per ms per animal
+const IncomePerAnimal float64 = 0.00001   // per ms per animal
 const AnimalBreedRate float64 = 0.0000001  // per ms per animal
 
 type Farm struct {

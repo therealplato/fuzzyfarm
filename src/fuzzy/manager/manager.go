@@ -1,6 +1,8 @@
 // One Manager handles one farm
 package manager
 import(
+    //"os"
+    //"io"
     "fmt"
     "time"
     "fuzzy/farm"
@@ -21,7 +23,7 @@ func NewManager(fs models.FarmSocket) (*Manager){
 func (m *Manager) StartFarm(){
     fmt.Println("Starting farm")
     m.Farm = &farm.Farm {
-        NFuzzies: 10,
+        NFuzzies: 100,
         Animals: make(map[string]*farm.Animal, 4),
     }
     m.Farm.Animals["cats"] = &farm.Animal {
@@ -46,11 +48,36 @@ func (m *Manager) ManageFarm(){
     c1000 := time.Tick(1000 * time.Millisecond)
     go m.updateFarmLoop(c1)
     go m.outputFarmLoop(c1000)
+    go m.receiveCommands()
+}
+
+func (m *Manager) receiveCommands(){
+    //test := io.NewReader()
+  //io.Copy(os.Stdout, m.FSocket)
+
+  for{
+      cmd := make([]byte, 0, 1024)
+      n, err := m.FSocket.Read(cmd[:cap(cmd)])
+      if(n>0 && err == nil){
+          cmdStr := string(cmd[:n]);
+          switch cmdStr {
+              case "cat":
+                m.Farm.NFuzzies -= 1
+                m.Farm.Animals["cats"].Spawn(1)
+              case "dog":
+                m.Farm.NFuzzies -= 1
+                m.Farm.Animals["dogs"].Spawn(1)
+          }
+      }
+  }
+  /*
+  fmt.Fscan(m.FSocket, &cmd)
+  */
 }
 
 func (m *Manager) updateFarmLoop(c1 <-chan time.Time){
-    m.Farm.Animals["cats"].Spawn(20)
-    m.Farm.Animals["dogs"].Spawn(10)
+    //m.Farm.Animals["cats"].Spawn(20)
+    //m.Farm.Animals["dogs"].Spawn(10)
     for _ = range c1 {
         // 1 ms tick
         for key := range m.Farm.Animals {
