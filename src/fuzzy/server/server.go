@@ -58,7 +58,13 @@ function init(){
     var A1 = document.getElementById("countKittens")
     var A2 = document.getElementById("countPuppies")
     
-    var WS = new WebSocket('wss://go-plato-platocambrian.c9users.io/socket')
+    var urlRX1 = /https?:\/\/(.*)/   // capture host, port, path, qs
+    var urlRX2 = /\/$/;            // trailing slash
+    var socketURL = window.location.href.match(urlRX1)[1];  // first capture group
+    var socketURL =  socketURL.replace(urlRX2, '');         // strip trailing slash if any
+    var socketURL = "wss://" + socketURL + "/socket"
+    var WS = new WebSocket(socketURL);
+    
     WS.onmessage = function(msg){
         var d = JSON.parse(msg.data);
         if(d.Err){
