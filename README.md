@@ -3,6 +3,15 @@ Fuzzy Plantation
 
 A Go experiment by Plato
 
+Usage
+-----
+git clone https://github.com/therealplato/fuzzyfarm
+mv fuzzyfarm/src/fuzzy $GOPATH/src
+cd $GOPATH/src
+go get ./...
+go get ./...
+go run fuzzy/main/main.go 0.0.0.0 8080
+
 Design notes
 ------------
 
